@@ -42,6 +42,13 @@ echo "java -jar vpl-junit-0.1.jar" >> vpl_execution
 chmod +x vpl_execution
 ``````````````````````````
 
+Useage
+------
+
+Write your Unit tests as you are used to do. If you want it to be graded, then add the annotation `@RunWith(VplGrader.class)` to your class. Every JUnit test (functions with the `@Test` annotation which has an addtional `@VplTestcase` annotation is graded.
+
+Each testcase weights 10 points. If you want to change this, then you can add the points to the annotation. Eg: `@VplTestcase(points=15)`
+
 
 Building the library
 --------------------

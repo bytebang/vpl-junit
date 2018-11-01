@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project default="create_jar" name="Create Runnable Jar for Project vpl-junit">
+	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
+	<!--ANT 1.7 is required                                        -->
+	<!--define folder properties-->
+
+	<property name="project-name" value="vpl-junit"/>
+	<property name="project-version" value="0.1"/>
+
+	<property name="debuglevel" value="source,lines,vars"/>
+	<property name="target" value="1.8"/>
+	<property name="source" value="1.8"/>
+	<property name="bin.dir" value="bin"/> 	<!-- Compile directory -->
+	<property name="lib.dir" value="vendor"/>
+	<property name="jar.dir" value="release"/>
+	<property name="jar.file" value="${project-name}-${project-version}.jar"/>
+
+	<path id="project.classpath">
+        <pathelement location="${bin.dir}"/>
+        <pathelement location="${lib.dir}/junit.jar"/>
+        <pathelement location="${lib.dir}/org.hamcrest.core_1.3.0.v201303031735.jar"/>
+    </path>
+	
+	<!-- Deletes all the garbage -->
+	<target name="clean">
+        <delete dir="${bin.dir}"/>
+		<delete dir="${jar.dir}"/>
+    </target>
+	
+	<!-- Initialize the build environment-->
+	<target name="init">
+		<!-- create the build directory -->
+        <mkdir dir="${bin.dir}"/>
+		<mkdir dir="${jar.dir}"/>
+	</target>
+
+	<!-- builds the project (without the tests) -->
+	<target name="build" depends="init">
+		<javac debug="true" debuglevel="${debuglevel}" destdir="${bin.dir}" source="${source}" target="${target}" includeantruntime="false">
+			<src path="src"/>
+			<classpath refid="project.classpath"/>
+		</javac>
+	</target>
+
+	<!-- creates the needed jar file -->
+	<target name="create_jar" depends="build">
+		<mkdir dir="${jar.dir}"/>
+
+		<jar destfile="${jar.dir}/${jar.file}">
+
+			<!-- package compiled classes into jar -->
+			<fileset dir="${bin.dir}"/>
+
+			<!-- package libraries into jar -->
+			<restrict>
+				<name name="**/*.class"/>
+				<archives>
+					<zips>
+						<fileset dir="${lib.dir}" includes="**/*.jar"/>
+					</zips>
+				</archives>
+			</restrict>
+
+			<!-- Define main class -->
+			<manifest>
+				<attribute name="Main-Class" value="VplJUnitTester"/>
+				<attribute name="Class-Path" value="."/>
+			</manifest>
+		</jar>
+	</target>
+
+	<!-- Runs the testcases with the newly generated library -->
+	<target name="run" depends="create_jar">
+
+		<!-- wipe old bin and copy the current jar to it -->
+ 		<delete dir="${bin.dir}"/>
+		<mkdir dir="${bin.dir}"/>
+		<copy file="${jar.dir}/${jar.file}" todir="${bin.dir}"/>
+
+		<!-- compile the testcases into the bin directory-->
+		<javac debug="true" debuglevel="${debuglevel}" destdir="${bin.dir}" source="${source}" target="${target}" includeantruntime="false">
+			<src path="examples"/>
+			<classpath>
+				<pathelement location="${jar.dir}/${jar.file}"/>
+			</classpath>
+		</javac>
+		
+		<!-- and run them -->	
+	    <java jar="${bin.dir}/${jar.file}" dir="${bin.dir}" fork="true" >
+	    </java>
+	</target>
+
+</project>

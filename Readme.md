@@ -9,7 +9,7 @@ This project builds a single jar which can be implemented into the [Virtual Prog
 Installation
 ------------
 
-1. You need to get the latest version of the jar file. You can either compile it by yourself, or just grab the [latest version from github](https://github.com/bytebang/junit-vpl/tree/master/release).
+1. You need to get the latest version of the jar file. You can either compile it by yourself, or just grab the [latest version from github](https://github.com/bytebang/vpl-junit/tree/master/release).
 2. Upload it to the execution files within the VPL Plugin
 3. Modify the `vpl_evaluate.sh` to include the jar into the classpath.
 4. Run the jar file

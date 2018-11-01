@@ -5,6 +5,7 @@ Purpose
 -------
 This project builds a single jar which can be implemented into the [Virtual Programming Lab](http://vpl.dis.ulpgc.es/) plugin for [Moodle Elearning Platform](https://moodle.org/ ) to run [JUnit 4](https://junit.org/junit4/) tests which are automatically graded.
 
+![Students classes are tested against JUnit tests which are automatically graded](https://github.com/bytebang/vpl-junit/blob/master/doc/student-evaluation.png)
 
 Installation
 ------------
@@ -48,6 +49,8 @@ Useage
 Write your Unit tests as you are used to do. If you want it to be graded, then add the annotation `@RunWith(VplGrader.class)` to your class. Every JUnit test (functions with the `@Test` annotation which has an addtional `@VplTestcase` annotation is graded.
 
 Each testcase weights 10 points. If you want to change this, then you can add the points to the annotation. Eg: `@VplTestcase(points=15)`
+
+![Defining a graded testcase](https://github.com/bytebang/vpl-junit/blob/master/doc/testcase_with_annotation.png)
 
 
 Building the library

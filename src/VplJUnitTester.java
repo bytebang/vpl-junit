@@ -5,7 +5,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
@@ -18,8 +22,9 @@ import org.junit.runner.notification.Failure;
  */
 public class VplJUnitTester extends org.junit.runner.notification.RunListener
 {
-	int totalPoints  = 0;
+	Map<String, Throwable> points = new LinkedHashMap<>();
 	
+	Pattern pointregex = Pattern.compile(".*_(\\d{1,})P.*");
 	/**
 	 * Runs All JUnit Testcases with the annotation {@see VplTestcase} of all given classes
 	 *   
@@ -63,8 +68,25 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 	    	core.run(Class.forName(classname));
 	    }
 	    
-	    // Summery for VPL
-	    System.out.println("\nGrade :=>> " + st.totalPoints);
+	    // Summary for VPL
+	    int totalPoints = 0;
+	    for(String functionname : st.points.keySet())
+	    {
+	    	Throwable t = st.points.get(functionname);
+	    	int points =  st.getPointsForFunctionName(functionname);
+	    	
+	    	if(t == null) // No Excaption -> Test has succeeded
+	    	{
+	    		totalPoints += points;
+	    		System.out.println("Comment :=>> " + functionname + " ... success -> " + points + " Points");	
+	    	}
+	    	else
+	    	{
+	    		System.out.println("Comment :=>> " + functionname + " ... failed -> 0 Points because " + t.getMessage());
+	    	}
+	    }
+
+	    System.out.println("\nGrade :=>> " + totalPoints);
 	}
 
 	/**
@@ -93,15 +115,33 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 		}
 		return foundClasses;
 	}
-
+	
+	/**
+	 * Returns the Points for a given function name.
+	 * If the function contains no hint for points then 0 is returned.
+	 * @param functionName
+	 * @return
+	 */
+	public int getPointsForFunctionName(String functionName)
+	{
+		Matcher m = pointregex.matcher(functionName);
+		if(m.matches())
+		{
+			String points = m.group(1);
+			return Integer.parseInt(points);
+		}
+		
+		return 0;
+	}
+	
 	/**
 	 * Adds the points of the current test to the total sum of points
 	 */
 	@Override
 	public void testFinished(Description description) throws Exception
 	{
-		VplTestcase myTestcase = (VplTestcase) description.getAnnotation(VplTestcase.class);
-		totalPoints += myTestcase.points();
+		String fnName = description.getTestClass().getName() + "." + description.getMethodName();
+		this.points.putIfAbsent(fnName,  null);
 	}
 	
 	/**
@@ -110,7 +150,8 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 	@Override
 	public void testFailure(Failure failure) throws Exception
 	{
-		VplTestcase vplTestcase= (VplTestcase) failure.getDescription().getAnnotation(VplTestcase.class);
-		totalPoints -= vplTestcase.points();
+		String fnName = failure.getDescription().getTestClass().getName() + "." + failure.getDescription().getMethodName();
+		this.points.putIfAbsent(fnName,  failure.getException());
+
 	}
 }

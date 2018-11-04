@@ -12,8 +12,9 @@ Installation
 
 1. You need to get the latest version of the jar file. You can either compile it by yourself, or just grab the [latest version from github](https://github.com/bytebang/vpl-junit/tree/master/release).
 2. Upload it to the execution files within the VPL Plugin
-3. Modify the `vpl_evaluate.sh` to include the jar into the classpath.
-4. Run the jar file
+3. Add the jar file under _Advanced settings_ to the _Files to keep when running_ 
+4. Modify the `vpl_evaluate.sh` to include the jar into the classpath.
+5. Run the jar file
 	a. If you run it without any arguments then it searches for classes wich are ending in `Test` or `Tests`. 
 	b. If you want to test only a certain JUnit class (with optional package) then just pass it as commandline parameter to the jar file.
 

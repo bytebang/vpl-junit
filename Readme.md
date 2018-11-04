@@ -47,7 +47,7 @@ chmod +x vpl_execution
 Useage
 ------
 
-###Scenario 1: Plain unittests
+### Scenario 1: Plain unittests
 
 
 We prefer the paradigm: Convention over configuration. This means that you can write your Unit tests as you used to do. If you want to award points for a JUnit Test then prepend the points you want to award. Here are some examples:
@@ -72,7 +72,7 @@ public class SimpleVplTest {
 }
 ``````````````````````````
 
-###Scenario 2: Check program output
+### Scenario 2: Check program output
 
 Sometimes you just want to check if a submitted program outputs the correct values for given input values. (Because in the first programming lessons you are most likely playing aroung with modified HelloWorld examples). This can also be achived using the `VplConsoleEmulator` class in your unittests. 
 
@@ -81,7 +81,7 @@ I tried to illustrate this with the `CowSay` example, where the students are ask
 The corresponding [CowSay-Unittests](https://github.com/bytebang/vpl-junit/blob/master/examples/CowSayTests.java) are testing if the programm reacts with a proper output.
 
 
-###Scenario 3: Interact with the sumbitted program
+### Scenario 3: Interact with the sumbitted program
 
 When examples become more difficult, then the students start to interact with their own programs via the commandline. The `VplConsoleEmulator` is also able to handle this.
 

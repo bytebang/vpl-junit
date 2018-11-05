@@ -32,7 +32,7 @@ get_source_files java
 
 #compile all .java files
 
-export CLASSPATH=$CLASSPATH:./vpl-junit-0.2.jar
+export CLASSPATH=$CLASSPATH:./vpl-junit-$vpl_junit_version.jar
 javac -J-Xmx16m -Xlint:deprecation *.java
 
 if [ "$?" -ne "0" ] ; then

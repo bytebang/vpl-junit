@@ -40,9 +40,10 @@ if [ "$?" -ne "0" ] ; then
 fi
 
 cat common_script.sh > vpl_execution
-echo "java -jar vpl-junit-x.y.jar" >> vpl_execution
+echo "timeout 5 java -jar vpl-junit-x.y.jar" >> vpl_execution
 chmod +x vpl_execution
 ``````````````````````````
+Replace the _vpl-junit-x.y.jar_ with the actual version you are runnging and adjust the execution timeout (here it is set to 5 seconds) as needed.
 
 Useage
 ------

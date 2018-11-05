@@ -73,8 +73,13 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 	    for(String functionname : st.points.keySet())
 	    {
 	    	Throwable t = st.points.get(functionname);
-	    	int points =  st.getPointsForFunctionName(functionname);
-	    	
+	    	Integer points =  st.getPointsForFunctionName(functionname);
+
+		if(points == null) // Testcase without points
+		{
+			continue;
+		}
+
 	    	if(t == null) // No Excaption -> Test has succeeded
 	    	{
 	    		totalPoints += points;
@@ -122,7 +127,7 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 	 * @param functionName
 	 * @return
 	 */
-	public int getPointsForFunctionName(String functionName)
+	public Integer getPointsForFunctionName(String functionName)
 	{
 		Matcher m = pointregex.matcher(functionName);
 		if(m.matches())
@@ -131,7 +136,7 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 			return Integer.parseInt(points);
 		}
 		
-		return 0;
+		return null;
 	}
 	
 	/**
@@ -152,6 +157,5 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 	{
 		String fnName = failure.getDescription().getTestClass().getName() + "." + failure.getDescription().getMethodName();
 		this.points.putIfAbsent(fnName,  failure.getException());
-
 	}
 }

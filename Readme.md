@@ -22,6 +22,9 @@ Installation
 #!/bin/bash
 #load common script and check programs
 
+vpl_junit_version=0.3
+vpl_junit_timeout=5
+
 . common_script.sh
 check_program javac
 check_program java
@@ -29,7 +32,7 @@ get_source_files java
 
 #compile all .java files
 
-export CLASSPATH=$CLASSPATH:./vpl-junit-x.y.jar
+export CLASSPATH=$CLASSPATH:./vpl-junit-0.2.jar
 javac -J-Xmx16m -Xlint:deprecation *.java
 
 if [ "$?" -ne "0" ] ; then
@@ -40,10 +43,10 @@ if [ "$?" -ne "0" ] ; then
 fi
 
 cat common_script.sh > vpl_execution
-echo "timeout 5 java -jar vpl-junit-x.y.jar" >> vpl_execution
+echo "timeout $vpl_junit_timeout java -jar vpl-junit-$vpl_junit_version.jar" >> vpl_execution
 chmod +x vpl_execution
 ``````````````````````````
-Replace the _vpl-junit-x.y.jar_ with the actual version you are runnging and adjust the execution timeout (here it is set to 5 seconds) as needed.
+Dont forget to set the actual version you are running the desired execution timeout (here it is set to 5 seconds) at the top of the script as needed.
 
 Useage
 ------

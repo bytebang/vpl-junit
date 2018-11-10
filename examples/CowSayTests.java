@@ -10,11 +10,19 @@ import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Tests the CowSay class
+ * @author gue
+ *
+ */
 public class CowSayTests
 {
 
 	static List<String> correctCow = new ArrayList<>();
 
+	/**
+	 * Called before all the tests are run
+	 */
 	@Before
 	public void setup()
 	{

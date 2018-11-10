@@ -1,8 +1,17 @@
 import java.util.Scanner;
 
+/**
+ * Example of a simple calculor. This class represents a typical student submission
+ * @author gue
+ *
+ */
 public class SimpleCalculator
 {
 
+	/**
+	 * Starts the calculator
+	 * @param args
+	 */
 	public static void main(String[] args)
 	{
 		Scanner s = new Scanner(System.in);

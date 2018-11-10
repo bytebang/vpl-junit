@@ -32,19 +32,20 @@ public class VplConsoleSimulator
 	 * with the oher methods of this class.
 	 * 
 	 * @param classname Class which should be started using java
-	 * @param args Optional arguments which are handed over to the started jvm. These are then available within the main agruments of the class under test
+	 * @param args Optional arguments which are handed over to the started jvm. These are then 
+	 * available within the main agruments of the class under test
 	 */
 	public VplConsoleSimulator(String classname, String ... args)
 	{
 		
-		String jvm_location;
+		String jvmLocation;
 		if (System.getProperty("os.name").startsWith("Win")) 
 		{
-		    jvm_location = System.getProperties().getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe";
+		    jvmLocation = System.getProperties().getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe";
 		} 
 		else 
 		{
-		    jvm_location = System.getProperties().getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+		    jvmLocation = System.getProperties().getProperty("java.home") + File.separator + "bin" + File.separator + "java";
 		}
 		
 		String currentClasspath = System.getProperty("java.class.path").toString();
@@ -53,13 +54,13 @@ public class VplConsoleSimulator
 		try 
 		{
 
-			 String[] cmdline = (String[]) Stream.concat(Stream.of(new String[]{jvm_location, 	// start another java vm
-																		"-cp",currentClasspath, // set the classpath to the current one
-																		classname}),			// Class which should be started
-					 									Stream.of(args))						// Optional Parameters
-					 						.toArray(b -> new String[b]);
+			String[] cmdline = (String[]) Stream.concat(Stream.of(new String[]{jvmLocation, 	// start another java vm
+				"-cp",currentClasspath, // set the classpath to the current one
+				classname}),			// Class which should be started
+				Stream.of(args))						// Optional Parameters
+				.toArray(b -> new String[b]);
 			 
-			 this.process = new ProcessBuilder(cmdline).start(); // Go for it !
+			this.process = new ProcessBuilder(cmdline).start(); // Go for it !
 		}
 		catch (IOException e) 
 		{

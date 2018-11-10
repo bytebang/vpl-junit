@@ -1,52 +1,33 @@
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
+/**
+ * Tests the calculator class
+ * @author gue
+ *
+ */
 //Since we share the console over multiple tests we need a guaranteed order of test execution
 @FixMethodOrder(MethodSorters.NAME_ASCENDING) 
 public class CalculatorTests 
 {
 	
-	static VplConsoleSimulator c ;
+	static VplConsoleSimulator c;
 	
-	/**
-	 * Initializes the Calculator console
-	 */
-	@BeforeClass
-	public static void startup()
-	{
-		CalculatorTests.c = new VplConsoleSimulator("SimpleCalculator");
-	}
-	
-	/**
-	 * Checks if the first non empty line is the banner
-	 * @throws IOException
-	 */
-	@Test
-    public void a_testBanner_10P() throws IOException 
+    /**
+     * Initializes the Calculator console
+     */
+    @BeforeClass
+    public static void startup()
     {
-    	String banner = c.getNextNonEmptyOutputLine();
-    	assertTrue(banner.equalsIgnoreCase("Welcome to the simple Calculator"));
-    }
-	
-	/**
-	 * Igneores stuff up to the line which starts with 'OK lets go' and 
-	 * expectes the String 'Enter the first integer' afterwards
-	 * 
-	 * @throws IOException
-	 */
-    @Test
-    public void b_testFirstIntegerInput_10P() throws IOException 
-    {
-    	c.skipOutputTill(a -> a.startsWith("OK lets go"));
-    	assertEquals(c.getNextNonEmptyOutputLine(), "Enter the first integer");
-    	c.enterLine("3");
+    	CalculatorTests.c = new VplConsoleSimulator("SimpleCalculator");
     }
     
     /**

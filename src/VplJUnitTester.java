@@ -17,7 +17,7 @@ import org.junit.runner.notification.Failure;
 
 
 /**
- * Tests a complete JUnit file
+ * Tests a complete JUnit file.
  * @author hg
  */
 public class VplJUnitTester extends org.junit.runner.notification.RunListener
@@ -25,8 +25,9 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 	Map<String, Throwable> points = new LinkedHashMap<>();
 	
 	Pattern pointregex = Pattern.compile(".*_(\\d{1,})P.*");
+	
 	/**
-	 * Runs All JUnit Testcases with the annotation {@see VplTestcase} of all given classes
+	 * Runs All JUnit Testcases with the annotation {@see VplTestcase} of all given classes.
 	 *   
 	 * @param args Classes to run the tests against
 	 * @throws ClassNotFoundException
@@ -34,7 +35,7 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 	 */
 	public static void main(String[] args) throws ClassNotFoundException, IOException
 	{
-	    JUnitCore core= new JUnitCore();
+	    JUnitCore core = new JUnitCore();
 	    VplJUnitTester st = new VplJUnitTester();
 	    core.addListener(st);
 	    
@@ -75,10 +76,10 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 	    	Throwable t = st.points.get(functionname);
 	    	Integer points =  st.getPointsForFunctionName(functionname);
 
-		if(points == null) // Testcase without points
-		{
-			continue;
-		}
+    		if(points == null) // Testcase without points
+    		{
+    			continue;
+    		}
 
 	    	if(t == null) // No Excaption -> Test has succeeded
 	    	{

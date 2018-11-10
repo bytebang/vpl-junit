@@ -1,26 +1,34 @@
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class OtherVplTests {
+/**
+ * A few tests to check if point summation is working
+ * @author gue
+ *
+ */
+public class OtherVplTests 
+{
 
     @Test
-    public void testOne_5P() {
+    public void testOne_5P() 
+    {
         assertTrue(true);
         assertEquals(0,1);
     }
 
     @Test
-    public void testTwo_10P() {
+    public void testTwo_10P() 
+    {
     	fail("This went wrong");
     }
     
     @Test
-    public void testThree_20P() {
+    public void testThree_20P()
+    {
     	assertTrue("Eins sollte 1 sein",1==2);
     }
     

@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 <project default="create_jar" name="Create Runnable Jar for Project vpl-junit">
-	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
-	<!--ANT 1.7 is required                                        -->
-	<!--define folder properties-->
-
 	<property name="project-name" value="vpl-junit"/>
-	<property name="project-version" value="0.3"/>
+	<property name="project-version" value="0.4"/>
 
 	<property name="debuglevel" value="source,lines,vars"/>
 	<property name="target" value="1.8"/>
 	<property name="source" value="1.8"/>
+	<property name="src.dir" value="src"/> 
 	<property name="bin.dir" value="bin"/> 	<!-- Compile directory -->
 	<property name="lib.dir" value="vendor"/>
 	<property name="jar.dir" value="release"/>
+	<property name="example.dir" value="examples"/>
+	<property name="checkstyle.dir" value="checkstyle"/>
 	<property name="jar.file" value="${project-name}-${project-version}.jar"/>
 
 	<path id="project.classpath">
@@ -21,7 +20,7 @@
         <pathelement location="${lib.dir}/junit.jar"/>
         <pathelement location="${lib.dir}/org.hamcrest.core_1.3.0.v201303031735.jar"/>
     </path>
-	
+
 	<!-- Deletes all the garbage -->
 	<target name="clean">
         <delete dir="${bin.dir}"/>
@@ -38,7 +37,7 @@
 	<!-- builds the project (without the tests) -->
 	<target name="build" depends="init">
 		<javac debug="true" debuglevel="${debuglevel}" destdir="${bin.dir}" source="${source}" target="${target}" includeantruntime="false">
-			<src path="src"/>
+			<src path="${src.dir}"/>
 			<classpath refid="project.classpath"/>
 		</javac>
 	</target>
@@ -86,6 +85,27 @@
 			</classpath>
 		</javac>
 		
+		<!-- copy the checkstyle definitions into the bin dir-->
+		<copy todir="${bin.dir}">
+		  <fileset dir="${checkstyle.dir}">
+		    <include name="**/checkstyle_*.xml"/>
+		  </fileset>
+		</copy>
+		
+		<!-- copy the examples from the example dir to the bin dir -->
+		<copy todir="${bin.dir}">
+		  <fileset dir="${example.dir}">
+		    <include name="**/*.java"/>
+		  </fileset>
+		</copy>
+
+		<!-- copy the sources from the example dir to the bin dir -->
+		<copy todir="${bin.dir}">
+		  <fileset dir="${src.dir}">
+		    <include name="**/*.java"/>
+		  </fileset>
+		</copy>
+
 		<!-- and run them -->	
 	    <java jar="${bin.dir}/${jar.file}" dir="${bin.dir}" fork="true" >
 	    </java>

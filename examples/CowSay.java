@@ -6,10 +6,11 @@
  */
 public class CowSay
 {
+
     /**
-	 * Start
-	 * @param args
-	 */
+     * Main method of the cowsay program. Expects the name of the cow to be greeted as argument
+     * @param args
+     */
     public static void main(String[] args)
 	{
 
@@ -17,7 +18,7 @@ public class CowSay
 		{
 			System.out.println("Please give the name in the first argument");
 			return;
-		}
+		 } // Intentionally wrong intendation to trigger checkstyle
 
 		System.out.println(" __________________");
 		System.out.println("< Hello " + args[0] + " >");
@@ -27,6 +28,8 @@ public class CowSay
 		System.out.println("            (__)\\       )\\/\\");
 		System.out.println("                ||----w |");
 		System.out.println("                ||     ||");
+		
+		System.exit(111);
 	}
 
 }

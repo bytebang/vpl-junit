@@ -1,16 +1,24 @@
-<?xml version="1.0"?>
-<!DOCTYPE module PUBLIC
-          "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
-          "https://checkstyle.org/dtds/configuration_1_3.dtd">
-
-<!--
-    Checkstyle configuration that checks the Google coding conventions from Google Java Style
-    that can be found at https://google.github.io/styleguide/javaguide.html.
-    Checkstyle is very configurable. Be sure to read the documentation at
-    http://checkstyle.sf.net (or in your downloaded distribution).
-    To completely disable a check, just comment it out or delete it from the file.
-    Authors: Max Vetrenko, Ruslan Diachenko, Roman Ivanov.
- -->
+<?xml version="1.0" standalone="yes"?>
+<!DOCTYPE module [
+    <!ELEMENT module (module|property|metadata|message)*>
+    <!ATTLIST module name NMTOKEN #REQUIRED>
+    <!ELEMENT property EMPTY>
+    <!ATTLIST property
+        name NMTOKEN #REQUIRED
+        value CDATA #REQUIRED
+        default CDATA #IMPLIED
+    >
+    <!ELEMENT metadata EMPTY>
+    <!ATTLIST metadata
+        name NMTOKEN #REQUIRED
+        value CDATA #REQUIRED
+    >
+    <!ELEMENT message EMPTY>
+    <!ATTLIST message
+        key NMTOKEN #REQUIRED
+        value CDATA #REQUIRED
+    >
+]>
 
 <module name = "Checker">
     <property name="charset" value="UTF-8"/>
@@ -21,21 +29,21 @@
     <!-- See http://checkstyle.sf.net/config_whitespace.html -->
 
     <module name="TreeWalker">
-    
+
     	<property name="tabWidth" value="4"/>
-    
+
     	<!-- File should be named as the class -->
         <module name="OuterTypeFilename"/>
-        
+
         <!-- Only one class per File -->
         <module name="OneTopLevelClass"/>
-        
+
         <!--  no lines longer than 150 chars -->
         <module name="LineLength">
             <property name="max" value="150"/>
             <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
         </module>
-        
+
         <!-- No escaped Strings and Chars -->
         <module name="IllegalTokenText">
             <property name="tokens" value="STRING_LITERAL, CHAR_LITERAL"/>
@@ -52,52 +60,55 @@
 
 		<!-- We want explicit imports -->
         <module name="AvoidStarImport"/>
-        
+        <module name="IllegalImport"/> <!-- defaults to sun.* packages -->
+        <module name="RedundantImport"/>
+		<module name="UnusedImports"/>
+
 		<!-- We do not want to have things like method declarations or imports to be line wrapped -->
         <module name="NoLineWrap"/>
-        
+
         <!-- Empty blocks are useless -->
         <module name="EmptyBlock">
             <property name="option" value="TEXT"/>
             <property name="tokens"
              value="LITERAL_TRY, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE, LITERAL_SWITCH"/>
         </module>
-        
+
         <!-- no Spaghetti code -->
         <module name="OneStatementPerLine"/>
-        
+
         <!-- Switches should have a default  -->
         <module name="MissingSwitchDefault"/>
-        
+
         <!-- Fallthroughs are potentially dangerous -->
         <module name="FallThrough"/>
-        
+
 		<!-- If there is something to do -> do it ! -->
         <module name="TodoComment"/>
-        
+
         <!-- We want to have our code structured, so we want empty lines between line separators,
-        after header, package, all import declarations, fields, constructors, methods, 
+        after header, package, all import declarations, fields, constructors, methods,
         nested classes, static initializers and instance initializers -->
         <module name="EmptyLineSeparator">
             <property name="allowNoEmptyLineBetweenFields" value="true"/>
         </module>
-        
-        
+
+
         <!-- There should be a space between method parameters -->
         <module name="MethodParamPad"/>
-        
+
         <!-- There should be no spaces between the names tokens -->
         <module name="NoWhitespaceBefore">
             <property name="tokens"
              value="COMMA, SEMI, POST_INC, POST_DEC, DOT"/>
             <property name="allowLineBreaks" value="true"/>
         </module>
-        
+
         <!-- No passing in between parantheses -->
         <module name="ParenPad">
         	<property name="option" value="nospace"/>
         </module>
-        
+
         <!-- No line wrap at these tokens -->
         <module name="OperatorWrap">
             <property name="option" value="NL"/>
@@ -105,12 +116,12 @@
              value="BAND, BOR, BSR, BXOR, DIV, EQUAL, GE, GT, LAND, LE, LITERAL_INSTANCEOF, LOR,
                     LT, MINUS, MOD, NOT_EQUAL, PLUS, QUESTION, SL, SR, STAR "/>
         </module>
-        
+
         <!-- Empty catch blocks are trying to hide something ! -->
         <module name="EmptyCatchBlock">
             <property name="exceptionVariableName" value="expected"/>
         </module>
-        
+
         <!-- Generics do not need whitespaces -->
         <module name="GenericWhitespace">
             <message key="ws.followed"
@@ -122,15 +133,15 @@
             <message key="ws.notPreceded"
              value="GenericWhitespace ''{0}'' is not preceded with whitespace."/>
         </module>
-        
+
         <!-- Comments should be intended as the thing that they are commenting -->
         <module name="CommentsIndentation"/>
-        
+
         <!-- General intendation - unsure if needed  -->
         <module name="Indentation">
             <property name="basicOffset" value="4"/>
             <property name="braceAdjustment" value="0"/>
         </module>
-        
+
     </module>
 </module>

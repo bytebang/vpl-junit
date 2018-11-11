@@ -33,7 +33,7 @@ public class VplConsoleSimulator
 	 * 
 	 * @param classname Class which should be started using java
 	 * @param args Optional arguments which are handed over to the started jvm. These are then 
-	 * available within the main agruments of the class under test
+	 *     available within the main agruments of the class under test
 	 */
 	public VplConsoleSimulator(String classname, String ... args)
 	{
@@ -295,7 +295,10 @@ public class VplConsoleSimulator
 	 */
 	public Integer getExitValue() throws InterruptedException 
 	{
-		process.waitFor();
+	    if(process.isAlive())
+		{
+	        process.waitFor();
+		}
 		return process.exitValue();
 	}
 	

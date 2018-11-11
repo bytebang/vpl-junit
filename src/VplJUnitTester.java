@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
@@ -23,6 +25,7 @@ import org.junit.runner.notification.Failure;
 public class VplJUnitTester extends org.junit.runner.notification.RunListener
 {
 	Map<String, Throwable> points = new LinkedHashMap<>();
+	Map<String, List<StyleViolation>> deductions = new LinkedHashMap<>();
 	
 	Pattern pointregex = Pattern.compile(".*_(\\d{1,})P.*");
 	
@@ -32,15 +35,16 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 	 * @param args Classes to run the tests against
 	 * @throws ClassNotFoundException
 	 * @throws IOException 
+	 * @throws InterruptedException 
 	 */
-	public static void main(String[] args) throws ClassNotFoundException, IOException
+	public static void main(String[] args) throws ClassNotFoundException, IOException, InterruptedException
 	{
-	    JUnitCore core = new JUnitCore();
+
 	    VplJUnitTester st = new VplJUnitTester();
-	    core.addListener(st);
-	    
 	    List<String> classesToRun = new ArrayList<>();
 	    
+	    // STEP 1: Check for files that should be tested 
+
 	    // No args -> Check all Classes in the current directory
 	    if(args.length == 0)
 	    {
@@ -62,14 +66,41 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 	    	classesToRun.addAll(Arrays.asList(args));
 	    }
 
+	    // STEP 2: Run tests for all classes in the arguments.   
+	    System.out.println("Running JUnit tests");
+        JUnitCore core = new JUnitCore();
+        core.addListener(st);
 	    
-	    // Run tests for all classes in the arguments.
 	    for(String classname : classesToRun)
 	    {
+	        System.out.println("\t" + classname);
 	    	core.run(Class.forName(classname));
 	    }
+
 	    
-	    // Summary for VPL
+	    // STEP 3: Run stylechecks against the sourcefiles
+	    System.out.println("Running checkstyle");
+        List<String> stylechecks = findStyleChecks();
+        List<File> sourcefiles = findSourceFiles();
+	    if(stylechecks.isEmpty() == false && sourcefiles.isEmpty() == false)
+	    {
+	        if(CheckstyleRunner.getCheckstyleExecutable().exists() == true)
+	        {
+        	    for(String check : stylechecks)
+        	    {   
+                    System.out.println("\tCheck " + (new File(check)).getName() + " against " + sourcefiles.toString());
+        	        List<StyleViolation> violations = CheckstyleRunner.run(check, sourcefiles);
+        	        st.deductions.put(check, violations);
+        	    }
+	        }
+	        else
+	        {
+	            System.out.println("Comment :=>> Cannot check for style violations because checkstyle was not found.");
+	        }
+
+	    }
+	    
+	    // STEP 4: Summary for JUnit
 	    int totalPoints = 0;
 	    for(String functionname : st.points.keySet())
 	    {
@@ -91,16 +122,119 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 	    		System.out.println("Comment :=>> " + functionname + " ... failed -> 0 Points because " + t.getMessage());
 	    	}
 	    }
+	    
+	    // STEP 5: Summary for checkstyle
+	    for(String check : st.deductions.keySet())
+	    {
+	        Integer max_deduction =  st.getDeductionsForCheckName(check);
+	        List<StyleViolation> violations = st.deductions.get(check);
+	        Integer drain = Math.min(max_deduction, violations.size());
+	        
+	        if(drain == 0)
+	        {
+	            continue;
+	        }
+	        
+	        System.out.println("Comment :=>> -" + drain + " Points because of " + violations.size() + " " 
+	            + (violations.size() == 1?"violation":"violations") + " against " + (new File(check)).getName());
+	        
+	        // Reduce the points
+	        totalPoints = totalPoints - drain;
+	        
+	        // Inform the user
+	        Map<String, List<StyleViolation>> violationsPerType = violations.stream()
+	                .collect(Collectors.groupingBy(StyleViolation::getType));
+	       
+	        // Give the user a hint of what went wrong
+	        System.out.println("< | -");
+	        for(String violationtype : violationsPerType.keySet())
+	        {
+	            List<StyleViolation> sv = violationsPerType.get(violationtype);
+	            System.out.println(violationtype + " (" + sv.size() + " " + (violations.size() == 1?"violation":"violations") + ")");
 
-	    System.out.println("\nGrade :=>> " + totalPoints);
+	            for(StyleViolation v : sv)
+	            {
+	                System.out.println("\t" + v.getFile().getName() + ":" + v.getLine() + " -> " + v.getMessage());
+	            }
+	        }
+	        System.out.println("- | >");
+	        
+	    }
+	    System.out.println("\nGrade :=>> " + Math.max(totalPoints,0));
 	}
 
-	/**
-	 * Searches Classes which look like testclasses in the directory
-	 * @param string
-	 * @return
-	 */
-	private static List<String> findTestClasses()
+    /**
+     * Gives minus points for the check
+     * @param check
+     * @return
+     */
+    private Integer getDeductionsForCheckName(String check)
+    {
+	    Pattern p = Pattern.compile(".*-([0-9]{1,})P.[XxMmLl]");
+	    
+	    Matcher m = p.matcher(check);
+	    
+        if(m.matches())
+        {
+            String points = m.group(1);
+            return Integer.parseInt(points);
+        }
+        
+        return Integer.MAX_VALUE;
+    }
+
+    /**
+     * Searches checkstyle_files.
+     * @return
+     */
+    private static List<String> findStyleChecks()
+    {
+	    List<String> foundChecks = new ArrayList<String>(); 
+	    try(DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("."), "checkstyle*.xml"))
+        {
+            for (Path entry : stream) 
+            {
+                foundChecks.add(entry.toAbsolutePath().normalize().toString());
+            }
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+        return foundChecks;
+    }
+
+    /**
+     * Searches checkstyle_files.
+     * @return
+     */
+    private static List<File> findSourceFiles()
+    {
+        List<File> foundSources = new ArrayList<>(); 
+        try(DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("."), "*.java"))
+        {
+            for (Path entry : stream) 
+            {
+                // Ignore everything that looks like a JUnit-test
+                if(entry.getFileName().toString().matches(".*[Tt]est[s]?.java") == false)
+                {
+                    foundSources.add(entry.toFile());
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+        return foundSources;
+    }
+    
+    /**
+     * Searches Classes which look like testclasses in the directory
+     * @param string
+     * @return
+     */
+    public static List<String> findTestClasses()
 	{
 		List<String> foundClasses = new ArrayList<String>();
 
@@ -122,6 +256,8 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 		return foundClasses;
 	}
 	
+	
+    
 	/**
 	 * Returns the Points for a given function name.
 	 * If the function contains no hint for points then 0 is returned.

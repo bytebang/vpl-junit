@@ -119,6 +119,57 @@ public void h_compactTestMultiplication_20P() throws IOException
 }
 ``````````````````````````
 
+### Scenario 4: Check the programming style of the submissions
+
+This feature uses [checkstyle](http://checkstyle.sourceforge.net/) which has to be installed on the jail server. During the style-checking phase it searches for all checkstyle_xx.xml files and invokes checkstyle against every java file that does not look like a unit test. If checkstyle is not found or if there are no java files, then this tests are skipped.
+
+If there are no violations then the graded points will be the points from the unit tests. Every violation counts as -1 Point. This means that if you have a program with 75 points grading from the unittests, but there are 10 style-violations found then the final grade will be 65 points.  
+
+You can also limit the maximum deduction of points by adding a prefix to the checkstyle file. Lets say your style checks are within the file checkstyle_myschool-10P.xml then the maximum deduction which can becaused by this file will be limited to -10 points.
+
+**Attention**: The jail server prohibits network connections. Since the default checkstyle runs are written in XML with an external document type definition checkstyle wants to download referenced `https://checkstyle.org/dtds/configuration_1_3.dtd`
+
+Since this is doomed to fail you have to embed the dtd into each checkstyle configuration itself. After the dtd you can embed all [checks](http://checkstyle.sourceforge.net/checks.html) as usual. Here is an example how this looks like:
+
+``````````````````````````{.xml}
+<?xml version="1.0" standalone="yes"?>
+<!DOCTYPE module [
+    <!ELEMENT module (module|property|metadata|message)*>
+    <!ATTLIST module name NMTOKEN #REQUIRED>
+    <!ELEMENT property EMPTY>
+    <!ATTLIST property
+        name NMTOKEN #REQUIRED
+        value CDATA #REQUIRED
+        default CDATA #IMPLIED
+    >
+    <!ELEMENT metadata EMPTY>
+    <!ATTLIST metadata
+        name NMTOKEN #REQUIRED
+        value CDATA #REQUIRED
+    >
+    <!ELEMENT message EMPTY>
+    <!ATTLIST message
+        key NMTOKEN #REQUIRED
+        value CDATA #REQUIRED
+    >
+]>
+
+<!-- Checkstyle configuration which checks the naming of functions -->
+
+<module name = "Checker">
+    <property name="charset" value="UTF-8"/>
+    <property name="severity" value="warning"/>
+    <property name="fileExtensions" value="java"/>
+
+    <module name="TreeWalker">
+         <module name="MethodName">
+		   <property name="format" value="^[a-z](_?[a-zA-Z0-9]+)*$"/>
+		</module>
+    </module>
+</module>
+``````````````````````````
+Further examples can be found in the [checkstyle directory] of the project(https://github.com/bytebang/vpl-junit/blob/master/checkstyle/)
+
 Building the library
 --------------------
 

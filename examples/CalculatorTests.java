@@ -1,33 +1,52 @@
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 
-/**
- * Tests the calculator class
- * @author gue
- *
- */
 //Since we share the console over multiple tests we need a guaranteed order of test execution
 @FixMethodOrder(MethodSorters.NAME_ASCENDING) 
 public class CalculatorTests 
 {
-	
-	static VplConsoleSimulator c;
-	
+    
+    static VplConsoleSimulator c ;
+    
     /**
      * Initializes the Calculator console
      */
     @BeforeClass
     public static void startup()
     {
-    	CalculatorTests.c = new VplConsoleSimulator("SimpleCalculator");
+        CalculatorTests.c = new VplConsoleSimulator("SimpleCalculator");
+    }
+    
+    /**
+     * Checks if the first non empty line is the banner
+     * @throws IOException
+     */
+    @Test
+    public void a_testBanner_10P() throws IOException 
+    {
+        String banner = c.getNextNonEmptyOutputLine();
+        assertTrue(banner.equalsIgnoreCase("Welcome to the simple Calculator"));
+    }
+    
+    /**
+     * Igneores stuff up to the line which starts with 'OK lets go' and 
+     * expectes the String 'Enter the first integer' afterwards
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void b_testFirstIntegerInput_10P() throws IOException 
+    {
+        c.skipOutputTill(a -> a.startsWith("OK lets go"));
+        assertEquals(c.getNextNonEmptyOutputLine(), "Enter the first integer");
+        c.enterLine("3");
     }
     
     /**
@@ -37,8 +56,8 @@ public class CalculatorTests
     @Test
     public void c_testOperatorInput_10P() throws IOException 
     {
-    	assertTrue(c.expectOutput(a-> a.equals("Enter the operation [+, -, *]")));
-    	c.enterLine("+");
+        assertTrue(c.expectOutput(a-> a.equals("Enter the operation [+, -, *]")));
+        c.enterLine("+");
     }
     
     /**
@@ -48,8 +67,8 @@ public class CalculatorTests
     @Test
     public void c_testSecondIntegerInput_10P() throws IOException 
     {
-    	assertTrue(c.expectOutput(a-> a.equals("Enter the second integer")));
-    	c.enterLine("5");
+        assertTrue(c.expectOutput(a-> a.equals("Enter the second integer")));
+        c.enterLine("5");
     }
     
     /**
@@ -59,7 +78,7 @@ public class CalculatorTests
     @Test
     public void d_testSumResult_10P() throws IOException 
     {
-    	assertTrue(c.expectOutput(a-> a.equalsIgnoreCase("THE SUM of 3 + 5 = 8")));
+        assertTrue(c.expectOutput(a-> a.equalsIgnoreCase("THE SUM of 3 + 5 = 8")));
     }
     
     /**
@@ -69,7 +88,7 @@ public class CalculatorTests
     @Test
     public void e_testExitValue_10P() throws IOException, InterruptedException 
     {
-    	assertTrue(c.getExitValue() == 111);
+        assertTrue(c.getExitValue() == 111);
     }
     
     /**
@@ -89,19 +108,19 @@ public class CalculatorTests
     @Test
     public void g_compactTestDifference_20P() throws IOException 
     {
-    	VplConsoleSimulator con = new VplConsoleSimulator("SimpleCalculator");
-    	
-    	con.skipOutputTill(a-> a.equals("Enter the first integer"));
-    	con.enterLine("6");
-    	
-    	con.skipOutputTill(a-> a.equals("Enter the operation [+, -, *]"));
-    	con.enterLine("-");
-    	
-    	con.skipOutputTill(a-> a.equals("Enter the second integer"));
-    	con.enterLine("2");
-    	
-    	assertTrue(con.expectOutput("The difference of 6 - 2 = 4"));
-    	
+        VplConsoleSimulator con = new VplConsoleSimulator("SimpleCalculator");
+        
+        con.skipOutputTill(a-> a.equals("Enter the first integer"));
+        con.enterLine("6");
+        
+        con.skipOutputTill(a-> a.equals("Enter the operation [+, -, *]"));
+        con.enterLine("-");
+        
+        con.skipOutputTill(a-> a.equals("Enter the second integer"));
+        con.enterLine("2");
+        
+        assertTrue(con.expectOutput("The difference of 6 - 2 = 4"));
+        
     }
     
     /**
@@ -111,19 +130,19 @@ public class CalculatorTests
     @Test
     public void h_compactTestMultiplication_20P() throws IOException 
     {
-    	VplConsoleSimulator con = new VplConsoleSimulator("SimpleCalculator");
-    	
-    	con.skipOutputTill(a-> a.equals("Enter the first integer"));
-    	con.enterLine("6");
-    	
-    	con.skipOutputTill(a-> a.equals("Enter the operation [+, -, *]"));
-    	con.enterLine("*");
-    	
-    	con.skipOutputTill(a-> a.equals("Enter the second integer"));
-    	con.enterLine("3");
-    	
-    	assertTrue(con.expectOutput("The multiplication of 6 * 3 = 18"));
-    	
+        VplConsoleSimulator con = new VplConsoleSimulator("SimpleCalculator");
+        
+        con.skipOutputTill(a-> a.equals("Enter the first integer"));
+        con.enterLine("6");
+        
+        con.skipOutputTill(a-> a.equals("Enter the operation [+, -, *]"));
+        con.enterLine("*");
+        
+        con.skipOutputTill(a-> a.equals("Enter the second integer"));
+        con.enterLine("3");
+        
+        assertTrue(con.expectOutput("The multiplication of 6 * 3 = 18"));
+        
     }
     
     /**
@@ -133,18 +152,18 @@ public class CalculatorTests
     @Test
     public void i_compactTestWrongOperator_20P() throws IOException 
     {
-    	VplConsoleSimulator con = new VplConsoleSimulator("SimpleCalculator");
-    	
-    	con.skipOutputTill(a-> a.equals("Enter the first integer"));
-    	con.enterLine("6");
-    	
-    	con.skipOutputTill(a-> a.equals("Enter the operation [+, -, *]"));
-    	con.enterLine("/");
-    	
-    	con.skipOutputTill(a-> a.equals("Enter the second integer"));
-    	con.enterLine("3");
-    	
-    	assertTrue(con.expectOutput("I dont know what to do"));
-    	
+        VplConsoleSimulator con = new VplConsoleSimulator("SimpleCalculator");
+        
+        con.skipOutputTill(a-> a.equals("Enter the first integer"));
+        con.enterLine("6");
+        
+        con.skipOutputTill(a-> a.equals("Enter the operation [+, -, *]"));
+        con.enterLine("/");
+        
+        con.skipOutputTill(a-> a.equals("Enter the second integer"));
+        con.enterLine("3");
+        
+        assertTrue(con.expectOutput("I dont know what to do"));
+        
     }
 }

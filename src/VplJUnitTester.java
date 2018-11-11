@@ -171,7 +171,7 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
      */
     private Integer getDeductionsForCheckName(String check)
     {
-	    Pattern p = Pattern.compile(".*-([0-9]{1,})P.[XxMmLl]");
+	    Pattern p = Pattern.compile(".*-([0-9]{1,})P.xml");
 
 	    Matcher m = p.matcher(check);
 

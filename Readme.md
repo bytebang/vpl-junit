@@ -168,7 +168,7 @@ Since this is doomed to fail you have to embed the dtd into each checkstyle conf
     </module>
 </module>
 ``````````````````````````
-Further examples can be found in the [checkstyle directory] of the project(https://github.com/bytebang/vpl-junit/blob/master/checkstyle/)
+Further examples can be found in the [checkstyle directory](https://github.com/bytebang/vpl-junit/blob/master/checkstyle/) of the project
 
 Building the library
 --------------------

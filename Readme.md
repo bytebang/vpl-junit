@@ -168,7 +168,7 @@ Since this is doomed to fail you have to embed the dtd into each checkstyle conf
     </module>
 </module>
 ``````````````````````````
-Further examples can be found in the [checkstyle directory](https://github.com/bytebang/vpl-junit/blob/master/checkstyle/) of the project
+Further examples can be found in the [checkstyle directory](https://github.com/bytebang/vpl-junit/blob/master/checkstyle/) of the project. Dont forget to add the checks that you want to perform  under _Advanced settings_ to the _Files to keep when running_. Otherwise vpl deletes the checkstyle definitions after compilation and the checks will not be started.
 
 Building the library
 --------------------

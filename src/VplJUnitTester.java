@@ -137,6 +137,27 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 	        if(drain == 0)
 	        {
 	            System.out.println("Comment :=>> " + checkName  + " ... no violations");
+	            
+	            Map<String, List<StyleViolation>> otherMessages = st.deductions.get(check)
+                        .stream()
+                        .filter(sv -> sv.getSeverity().equalsIgnoreCase("WARN") == false)
+                        .collect(Collectors.groupingBy(StyleViolation::getSeverity));
+	            
+	            if(otherMessages.isEmpty() == false)
+	            {
+    	            System.out.println("<|--");
+    	            for(String severity : otherMessages.keySet())
+    	            {
+    	                List<StyleViolation> sv = otherMessages.get(severity);
+    	                System.out.println("Messages of type '" + severity + "' (not counted as violations)");
+    
+    	                for(StyleViolation v : sv)
+    	                {
+    	                    System.out.println("        o " + v.getFile().getName() + ":" + v.getLine() + " -> " + v.getMessage());
+    	                }
+    	            }
+    	            System.out.println("--|>");
+	            }
 				continue;
 	        }
 

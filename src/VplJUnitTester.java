@@ -127,7 +127,11 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 	    for(String check : st.deductions.keySet())
 	    {
 	        Integer max_deduction =  st.getDeductionsForCheckName(check);
-	        List<StyleViolation> violations = st.deductions.get(check);
+	        List<StyleViolation> violations = st.deductions.get(check)
+	                                           .stream()
+	                                           .filter(sv -> sv.getSeverity().equalsIgnoreCase("WARN"))
+	                                           .collect(Collectors.toList());
+	        
 	        Integer drain = Math.min(max_deduction, violations.size());
 	        String checkName = (new File(check)).getName();
 	        if(drain == 0)
@@ -136,7 +140,7 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 				continue;
 	        }
 
-	        System.out.println("Comment :=>> " + checkName  + " ... -" + drain + " Points because of " + violations.size() + " "
+	        System.out.println("Comment :=>> " + checkName  + " ... -" + drain + " points because of " + violations.size() + " "
 	            + (violations.size() == 1?"violation":"violations"));
 
 	        // Reduce the points

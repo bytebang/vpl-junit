@@ -9,12 +9,13 @@ import java.util.regex.Pattern;
  */
 public class StyleViolation
 {
+    private String severity;
     private File file;
     private String line;
     private String message;
     private String type;
     
-    private Pattern violation = Pattern.compile("\\[WARN\\] (.*):([0-9]{1,}):(.*) \\[(.*)\\]");
+    private Pattern violation = Pattern.compile("\\[(.*)\\] (.*):([0-9]{1,}):(.*) \\[(.*)\\]");
     
     /**
      * Private to prevent instantiation
@@ -35,14 +36,20 @@ public class StyleViolation
         Matcher m = sv.violation.matcher(logline);
         if(m.matches())
         {
-            sv.file = new File(m.group(1));
-            sv.line = m.group(2);
-            sv.message = m.group(3);
-            sv.type = m.group(4);
+            sv.severity = m.group(1);
+            sv.file = new File(m.group(2));
+            sv.line = m.group(3);
+            sv.message = m.group(4);
+            sv.type = m.group(5);
             return sv;
         }
         
         return null;
+    }
+
+    public String getSeverity()
+    {
+        return severity;
     }
 
     public File getFile()

@@ -123,7 +123,7 @@ public void h_compactTestMultiplication_20P() throws IOException
 
 This feature uses [checkstyle](http://checkstyle.sourceforge.net/) which has to be installed on the jail server. During the style-checking phase it searches for all checkstyle_xx.xml files and invokes checkstyle against every java file that does not look like a unit test. If checkstyle is not found or if there are no java files, then this tests are skipped.
 
-If there are no violations then the graded points will be the points from the unit tests. Every violation counts as -1 Point. This means that if you have a program with 75 points grading from the unittests, but there are 10 style-violations found then the final grade will be 65 points.  
+If there are no violations (of type `WARN`)) then the graded points will be the points from the unit tests. Every violation counts as -1 Point. This means that if you have a program with 75 points grading from the unittests, but there are 10 style-violations found then the final grade will be 65 points.  
 
 You can also limit the maximum deduction of points by adding a prefix to the checkstyle file. Lets say your style checks are within the file checkstyle_myschool-10P.xml then the maximum deduction which can becaused by this file will be limited to -10 points.
 

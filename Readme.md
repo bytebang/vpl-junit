@@ -50,8 +50,8 @@ chmod +x vpl_execution
 
 Dont forget to set/ modify the desired maximum execution timeout (here it is set to 5 seconds) at the top of the script as needed.
 
-Useage
-------
+Usage
+-----
 
 ### Scenario 1: Plain unittests
 

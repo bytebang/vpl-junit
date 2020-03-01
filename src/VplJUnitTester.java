@@ -119,7 +119,19 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 	    	}
 	    	else
 	    	{
-	    		System.out.println("Comment :=>> " + functionname + " ... failed -> 0 Points because " + t.getMessage());
+	    		String message = t.getMessage();
+
+	    		if(message.contains(System.getProperty("line.separator")))
+	    		{
+	    			System.out.println("Comment :=>> " + functionname + " ... failed -> 0 Points because ...");
+	    			System.out.println("<|--");
+	    			System.out.println(message);
+	    			System.out.println("--|>");
+	    		}
+	    		else
+	    		{
+	    			System.out.println("Comment :=>> " + functionname + " ... failed -> 0 Points because " + message);
+	    		}
 	    	}
 	    }
 

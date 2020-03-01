@@ -78,7 +78,12 @@ public class CalculatorTests
     @Test
     public void d_testSumResult_10P() throws IOException 
     {
-        assertTrue(c.expectOutput(a-> a.equalsIgnoreCase("THE SUM of 3 + 5 = 8")));
+        // Just check the result
+        // assertTrue(c.expectOutput(a-> a.equalsIgnoreCase("THE SUM of 3 + 5 = 8")));
+        
+        // Check the result and give feedback
+        assertTrue("THE RESULT IS WRONG " + System.getProperty("line.separator") + " GO AND CHECK YOUR CALCULATION", 
+    			   c.expectOutput(a-> a.equalsIgnoreCase("THE SUM of 3 + 5 = 8")));
     }
     
     /**

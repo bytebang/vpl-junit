@@ -255,6 +255,12 @@ public class VplConsoleSimulator
 		}
 	}
 	
+	/**
+	 * Fetches the full content and asserts the Strings to be containing in the output. 
+	 * Auto generates an error message containing the fullConsoleIO and the expected content
+	 * @param string the content
+	 * @throws IOException 
+	 */
 	public void assertOutput(String expectedValue) throws IOException
 	{
 		assertOutput(true, expectedValue);
@@ -283,12 +289,23 @@ public class VplConsoleSimulator
 		}
 	}	
 	
+	/**
+	 * Fetches the full output and test the String with the condition with automatic assertion.
+	 * @param string
+	 * @throws IOException 
+	 */
 	public void assertOutput(Predicate<String> condition) throws IOException
 	{
 		boolean result = expectOutput(condition);
 		assertTrue(result);
 	}
 	
+	/**
+	 * Fetches the full output and test the String with the condition with automatic assertion.
+	 * Generates an error message from getFullConsoleIO with errorMessage lambda expression.
+	 * @param string
+	 * @throws IOException 
+	 */
 	public void assertOutput(Predicate<String> condition, Function<String, String> errorMessage) throws IOException
 	{
 		boolean result = expectOutput(condition);
@@ -310,6 +327,7 @@ public class VplConsoleSimulator
 		boolean result = condition.test(line);
 		return result;
 	}
+	
 	
 	/** 
 	 * Convenience function: Expects the last line to be the exact the following value 

@@ -83,9 +83,9 @@ public class VplConsoleSimulator
 	{
 		if(immideateLogToConsole == true) 
 		{
-			System.out.println("< " + s);
+			System.out.println("> out " + s);
 		}
-		consolewindow.add("< " + s);
+		consolewindow.add("> in:  " + s);
 	}
 	
 	/**
@@ -96,9 +96,9 @@ public class VplConsoleSimulator
 	{
 		if(immideateLogToConsole == true) 
 		{
-			System.out.println("> " + s);
+			System.out.println("> out " + s);
 		}
-		consolewindow.add("> " + s);
+		consolewindow.add("> out: " + s);
 	}
 	
 	/**
@@ -109,9 +109,9 @@ public class VplConsoleSimulator
 	{
 		if(immideateLogToConsole == true) 
 		{
-			System.out.println("! " + s);
+			System.out.println("> ! " + s);
 		}
-		consolewindow.add("! " + s);
+		consolewindow.add("> ! " + s);
 	}
 
 	/**
@@ -120,7 +120,8 @@ public class VplConsoleSimulator
 	 */
 	public String getFullConsoleIO()
 	{
-		return consolewindow.stream().collect(Collectors.joining("\r\n")).toString();
+		//return consolewindow.stream().collect(Collectors.joining("\r\n")).toString();
+		return consolewindow.stream().collect(Collectors.joining(System.lineSeparator())).toString();
 	}
 
 	/**
@@ -240,12 +241,14 @@ public class VplConsoleSimulator
 		boolean expectOutputOk = this.expectOutputContains(content);
 		if (generateErrorMessage)
 		{
-			String errorMessage = System.lineSeparator() + "***Error producing console log***" + System.lineSeparator() +  
-					this.getFullConsoleIO() + System.lineSeparator() + " Last output line should contain: ";
+			String errorMessage = System.lineSeparator() + "> ***Error producing console log***" + System.lineSeparator() +  
+					this.getFullConsoleIO() + System.lineSeparator() + ">  ***Last output line should contain: ";
 			for (String string : content) 
 			{
-				errorMessage += "\"" + string + "\" ";
+				errorMessage += "\"" + string + "\"";
 			}
+			
+			errorMessage += "***"+ System.lineSeparator() + " >";
 			
 			assertTrue(errorMessage, expectOutputOk);
 		}
@@ -277,9 +280,9 @@ public class VplConsoleSimulator
 		
 		if (generateErrorMessage)
 		{
-			String errorMessage = System.lineSeparator() + "***Error producing console log***" + System.lineSeparator() +  
-					getFullConsoleIO() + System.lineSeparator() + " Last output line should end with: " +
-					"\"" + expectedValue + "\" ";
+			String errorMessage = System.lineSeparator() + "> ***Error producing console log***" + System.lineSeparator() +  
+					getFullConsoleIO() + System.lineSeparator() + "> Last output line should end with: " +
+					"\"" + expectedValue + "\"" + System.lineSeparator() + " >";
 			
 			assertTrue(errorMessage, result);
 		}

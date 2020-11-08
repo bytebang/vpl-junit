@@ -1,4 +1,4 @@
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,6 +9,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -121,7 +122,6 @@ public class VplConsoleSimulator
 	{
 		return consolewindow.stream().collect(Collectors.joining("\r\n")).toString();
 	}
-	
 
 	/**
 	 * Returns the full output of the programm since the last call
@@ -178,7 +178,7 @@ public class VplConsoleSimulator
 			}
 			
 			if(line.length() > 0)
-			{
+			{				
 				return(line);
 			}
 		}
@@ -218,7 +218,85 @@ public class VplConsoleSimulator
 	}
 	
 	/**
-	 * Fetches the full output and expects the String to be at the end of the output.
+	 * Fetches the full content and asserts the Strings to be containing in the output. 
+	 * Auto generates an error message containing the fullConsoleIO and the expected content
+	 * @param string the content
+	 * @throws IOException 
+	 */
+	public void assertOutputContains(String ... content) throws IOException
+	{
+		assertOutputContains(true, content);
+	}
+	
+	/**
+	 * Fetches the full content and asserts the Strings to be containing in the output.
+	 * @param string the content
+	 * @param boolean if true auto generates an error message 
+	 * containing the fullConsoleIO and the expected content
+	 * @throws IOException 
+	 */
+	public void assertOutputContains(boolean generateErrorMessage, String ... content) throws IOException
+	{
+		boolean expectOutputOk = this.expectOutputContains(content);
+		if (generateErrorMessage)
+		{
+			String errorMessage = System.lineSeparator() + "***Error producing console log***" + System.lineSeparator() +  
+					this.getFullConsoleIO() + System.lineSeparator() + " Last output line should contain: ";
+			for (String string : content) 
+			{
+				errorMessage += "\"" + string + "\" ";
+			}
+			
+			assertTrue(errorMessage, expectOutputOk);
+		}
+		else
+		{
+			assertTrue(expectOutputOk);
+		}
+	}
+	
+	public void assertOutput(String expectedValue) throws IOException
+	{
+		assertOutput(true, expectedValue);
+	}
+	
+	/**
+	 * Fetches the full output and asserts the String to be at the end of the output.
+	 * @param string
+	 * @throws IOException 
+	 */
+	public void assertOutput(boolean generateErrorMessage, String expectedValue) throws IOException
+	{
+		boolean result = expectOutput(expectedValue);
+		
+		if (generateErrorMessage)
+		{
+			String errorMessage = System.lineSeparator() + "***Error producing console log***" + System.lineSeparator() +  
+					getFullConsoleIO() + System.lineSeparator() + " Last output line should end with: " +
+					"\"" + expectedValue + "\" ";
+			
+			assertTrue(errorMessage, result);
+		}
+		else
+		{
+			assertTrue(result);
+		}
+	}	
+	
+	public void assertOutput(Predicate<String> condition) throws IOException
+	{
+		boolean result = expectOutput(condition);
+		assertTrue(result);
+	}
+	
+	public void assertOutput(Predicate<String> condition, Function<String, String> errorMessage) throws IOException
+	{
+		boolean result = expectOutput(condition);
+		assertTrue(errorMessage.apply(getFullConsoleIO()), result);
+	}
+	
+	/**
+	 * Fetches the full output and test the String with the condition.
 	 * @param string
 	 * @throws IOException 
 	 */
@@ -232,9 +310,9 @@ public class VplConsoleSimulator
 		boolean result = condition.test(line);
 		return result;
 	}
-
+	
 	/** 
-	 * Convinience function: Expects the last line to be the exact the following value 
+	 * Convenience function: Expects the last line to be the exact the following value 
 	 * @param expectedValue
 	 * @return
 	 * @throws IOException
@@ -242,6 +320,28 @@ public class VplConsoleSimulator
 	public boolean expectOutput(String expectedValue) throws IOException
 	{
 		return this.expectOutput(line -> line.equals(expectedValue));
+	}
+	
+	/**
+	 * Convenience function: Expects the Strings to be containing in the output.
+	 * @param string the content
+	 * @param boolean if true auto generates an error message 
+	 * containing the inputOutputDialog and the expected content
+	 * @throws IOException 
+	 */
+	public boolean expectOutputContains(String ... content) throws IOException 
+	{
+		return this.expectOutput(line -> 
+		{
+			for (String string : content) 
+			{
+				if (!line.contains(string))
+				{
+					return false;
+				}
+			}
+			return true;
+		});
 	}
 	
 	/**

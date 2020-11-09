@@ -325,7 +325,9 @@ public class VplConsoleSimulator
 		String line = this.getNextNonEmptyOutputLine();
 		if(line == null)
 		{
-			fail("Line is null");
+			String errorMessage = System.lineSeparator() + "> ***Error producing console log***" + System.lineSeparator() +  
+					getFullConsoleIO() + System.lineSeparator() + "***> Last output line is empty ***";
+			fail(errorMessage);
 		}
 		boolean result = condition.test(line);
 		return result;

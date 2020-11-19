@@ -231,8 +231,8 @@ public class VplConsoleSimulator
 	
 	/**
 	 * Fetches the full content and asserts the Strings to be containing in the output.
-	 * @param string the content
-	 * @param boolean if true auto generates an error message 
+	 * @param content all string have to in the output
+	 * @param generateErrorMessage if true auto generates an error message 
 	 * containing the fullConsoleIO and the expected content
 	 * @throws IOException 
 	 */

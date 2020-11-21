@@ -312,7 +312,8 @@ public class VplConsoleSimulator
 	public void assertOutput(Predicate<String> condition, Function<String, String> errorMessage) throws IOException
 	{
 		boolean result = expectOutput(condition);
-		assertTrue(errorMessage.apply(getFullConsoleIO()), result);
+		String consoleIo = getFullConsoleIO();
+		assertTrue(errorMessage.apply(consoleIo), result);
 	}
 	
 	/**

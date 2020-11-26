@@ -2,7 +2,7 @@
 
 <project default="create_jar" name="Create Runnable Jar for Project vpl-junit">
 	<property name="project-name" value="vpl-junit"/>
-	<property name="project-version" value="0.6"/>
+	<property name="project-version" value="0.7"/>
 
 	<property name="debuglevel" value="source,lines,vars"/>
 	<property name="target" value="1.8"/>

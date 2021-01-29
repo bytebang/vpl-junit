@@ -97,7 +97,6 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 	        {
 	            System.out.println("Comment :=>> Cannot check for style violations because checkstyle was not found.");
 	        }
-
 	    }
 
 	    // STEP 4: Summary for JUnit
@@ -112,7 +111,7 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
     			continue;
     		}
     		
-	    	if(t == null) // No Excaption -> Test has succeeded
+	    	if(t == null) // No Exception -> Test has succeeded
 	    	{
 	    		totalPoints += points;
 	    		System.out.println("Comment :=>> " + functionname + " ... success -> " + points + " Points");
@@ -123,6 +122,13 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
     			System.out.println("<|--");
     			System.out.println(">" + t.toString());
     			System.out.println("--|>");
+    			
+    			if (t.getClass() != java.lang.AssertionError.class)
+    			{
+    				System.out.println("<|--");
+        			System.out.println("> at: " + t.getStackTrace()[0]);
+        			System.out.println("--|>");
+    			}
 	    	}
 	    }
 

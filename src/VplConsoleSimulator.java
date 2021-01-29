@@ -327,7 +327,7 @@ public class VplConsoleSimulator
 		if(line == null)
 		{
 			String errorMessage = System.lineSeparator() + "> ***Error producing console log***" + System.lineSeparator() +  
-					getFullConsoleIO() + System.lineSeparator() + "***> Last output line is empty ***";
+					getFullConsoleIO() + System.lineSeparator() + "***> Last output line is null ***";
 			fail(errorMessage);
 		}
 		boolean result = condition.test(line);
@@ -405,11 +405,22 @@ public class VplConsoleSimulator
 	 * @param string
 	 * @throws IOException 
 	 */
-	public void enter(String string) throws IOException
+	public void enter(String string)
 	{
+		try 
+		{
+			outWriter.write(string);
+			outWriter.flush();
+		}
+		catch(IOException ex)
+		{
+			String errorMessage = System.lineSeparator() + "> ***Error producing console log***" + System.lineSeparator() +  
+					getFullConsoleIO() + System.lineSeparator() + "> ***Could not enter Line. Console application is not responding.***" + System.lineSeparator();
+			fail(errorMessage);
+		}
+		
+		//log only if writing was succesful
 		log_programInput(string.trim());
-		outWriter.write(string);
-		outWriter.flush();
 	}
 
 	/**

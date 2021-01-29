@@ -111,7 +111,7 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
     		{
     			continue;
     		}
-
+    		
 	    	if(t == null) // No Excaption -> Test has succeeded
 	    	{
 	    		totalPoints += points;
@@ -119,19 +119,10 @@ public class VplJUnitTester extends org.junit.runner.notification.RunListener
 	    	}
 	    	else
 	    	{
-	    		String message = t.getMessage();
-
-	    		if(message.contains(System.getProperty("line.separator")))
-	    		{
-	    			System.out.println("Comment :=>> " + functionname + " ... failed -> 0 Points because ...");
-	    			System.out.println("<|--");
-	    			System.out.println(message);
-	    			System.out.println("--|>");
-	    		}
-	    		else
-	    		{
-	    			System.out.println("Comment :=>> " + functionname + " ... failed -> 0 Points because " + message);
-	    		}
+	    		System.out.println("Comment :=>> " + functionname + " ... failed -> 0 Points because ...");
+    			System.out.println("<|--");
+    			System.out.println(">" + t.toString());
+    			System.out.println("--|>");
 	    	}
 	    }
 

@@ -1,6 +1,8 @@
 vpl-junit
 =========
 
+![build](https://github.com/bytebang/vpl-junit/actions/workflows/ant.yml/badge.svg)
+
 Purpose
 -------
 This project builds a single jar which can be implemented into the [Virtual Programming Lab](http://vpl.dis.ulpgc.es/) plugin for [Moodle Elearning Platform](https://moodle.org/) to run [JUnit 4](https://junit.org/junit4/) tests which are automatically graded.

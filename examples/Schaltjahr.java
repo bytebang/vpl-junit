@@ -17,5 +17,7 @@ public class Schaltjahr {
 		{
 			System.out.println("Kein Schaltjahr");
 		}
+		
+		sc.close();
 	}
 }
